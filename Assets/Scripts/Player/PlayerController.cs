@@ -23,12 +23,20 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundMask;
     private RaycastHit2D hit;
 
+    private Vector2 lastMovementDirection = Vector2.down;
     public float groundCheckDistance = 0.1f; 
+
+    public Vector2 LastMovementDirection {
+        get {
+            return lastMovementDirection;
+        }
+    }
 
     private void Awake() {
         rb2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
+
 
     void Start()
     {
@@ -41,6 +49,7 @@ public class PlayerController : MonoBehaviour
 
         animator.SetFloat("Speed", movement.sqrMagnitude);
         if (movement.sqrMagnitude != 0) {
+            lastMovementDirection = movement;
             animator.SetFloat("Horizontal", movement.x);
             animator.SetFloat("Vertical", movement.y);
         }
@@ -63,14 +72,14 @@ public class PlayerController : MonoBehaviour
         // hit = Physics2D.Raycast(transform.position, movement, movementSpeed, groundMask);
         // if (hit.collider != null) {
         //     
+        // Debug.Log(hit.collider);
             
         // } else {
         //     rb2D.MovePosition(rb2D.position - movement * Time.fixedDeltaTime * movementSpeed);
         // }
         rb2D.MovePosition(position);
 
-        // Physics.Raycast(transform.position, Vector3.zero, out hitInfo);
-        Debug.Log(hit.collider);
+
     }
 
     void Flip ()
@@ -80,10 +89,6 @@ public class PlayerController : MonoBehaviour
         theScale.x *= -1;
         transform.localScale = theScale;
         
-    }
-
-    private void OnTriggerEnter2D(Collider2D collider) {
-        Debug.Log("Collision");
     }
 
 }
